@@ -541,10 +541,8 @@ def plot_CDF_distribution(outname, df_sim, real_data):
     
     real_data = real_data["N_NR_genes_in_spot"]
     
-    # ---------- Préparer l'échelle commune (tous les x possibles) ----------
     all_region_sizes = sorted(set(df_sim.values.flatten()).union(set(real_data.values)))
 
-    # ---------- CDFs des simulations ----------
     cdf_list = []
     for col in df_sim.columns:
         counts = df_sim[col].value_counts().sort_index()
@@ -557,24 +555,20 @@ def plot_CDF_distribution(outname, df_sim, real_data):
     cdf_mean = cdf_df.mean()
     cdf_std = cdf_df.std()
 
-    # ---------- CDF des données réelles ----------
     real_counts = real_data.value_counts().sort_index()
     real_cum = real_counts.cumsum()
     real_cdf = real_cum / real_cum.max() * 100
     real_cdf_full = real_cdf.reindex(all_region_sizes, method='ffill').fillna(0)
 
-    # ---------- Tracer ----------
     plt.figure(figsize=(10, 6))
 
-    # Moyenne des simulations
     plt.plot(all_region_sizes, cdf_mean, label="CDF moyenne (simulations)", color="blue")
     plt.fill_between(all_region_sizes, cdf_mean - cdf_std, cdf_mean + cdf_std,
                     color="blue", alpha=0.3, label="±1 écart-type")
 
-    # Données réelles
+
     plt.plot(all_region_sizes, real_cdf_full, label="Données réelles", color="red", linewidth=2)
 
-    # Mise en forme
     plt.xlabel("Taille de la région (nb de gènes accessoires)")
     plt.ylabel("Densité cumulative (%)")
     plt.title("CDF cumulative : simulations vs données réelles")
@@ -592,11 +586,8 @@ def plot_mean_distribution(outname, df_sim, real_data):
 
     real_data = real_data["N_NR_genes_in_spot"]
     
-    # 1. Moyennes des simulations
     simulation_means = df_sim.mean(axis=0)
 
-    # 2. Moyenne des données réelles
-    # Adapter cette ligne si ta colonne a un nom spécifique
     real_data = real_data.squeeze()
     real_mean = real_data.mean()
 
@@ -606,16 +597,10 @@ def plot_mean_distribution(outname, df_sim, real_data):
     p_value_lower = (simulation_means <= real_mean).sum() / len(simulation_means)
     p_value_higher = (simulation_means >= real_mean).sum() / len(simulation_means)
     
-    # 3. Plot
     plt.figure(figsize=(10, 6))
-
-    # Histogramme ou KDE des moyennes simulées
     sns.histplot(simulation_means, kde=True, bins=30, color="blue", alpha=0.6, label="Moyennes (simulations)")
-
-    # Ligne verticale pour la moyenne réelle
     plt.axvline(real_mean, color="red", linestyle="--", linewidth=2, label=f"Moyenne réelle = {real_mean:.2f}")
 
-    # Texte indicatif
     plt.text(0.95, 0.8,
              f"Simulations > real : {n_above} ({round(n_above/len(simulation_means)*100, 2)}%)\n"
              f"Unilateral p-value > real : {p_value_higher}\n"
@@ -628,7 +613,6 @@ def plot_mean_distribution(outname, df_sim, real_data):
              bbox=dict(boxstyle="round", facecolor="white", edgecolor="gray", alpha=0.8))
     
     
-    # Mise en forme
     plt.xlabel("Moyenne de taille de région (nb de gènes accessoires)")
     plt.ylabel("Fréquence")
     plt.title("Distribution des moyennes par simulation vs moyenne réelle")
@@ -645,11 +629,8 @@ def plot_coloc_mean_distribution(outname, df_sim, real_data, elem_colocalizing):
     
     real_data = real_data[f"N_{elem_colocalizing}_colocalizing"]
     
-    # 1. Moyennes des simulations
     simulation_means = df_sim.mean(axis=0)
 
-    # 2. Moyenne des données réelles
-    # Adapter cette ligne si ta colonne a un nom spécifique
     real_data = real_data.squeeze()
     real_mean = real_data.mean()
 
@@ -658,17 +639,13 @@ def plot_coloc_mean_distribution(outname, df_sim, real_data, elem_colocalizing):
     n_equal = (simulation_means == real_mean).sum()
     p_value_lower = (simulation_means <= real_mean).sum() / len(simulation_means)
     p_value_higher = (simulation_means >= real_mean).sum() / len(simulation_means)
-    
-    # 3. Plot
+
     plt.figure(figsize=(10, 6))
 
-    # Histogramme ou KDE des moyennes simulées
     sns.histplot(simulation_means, kde=True, bins=30, color="blue", alpha=0.6, label="Moyennes (simulations)")
 
-    # Ligne verticale pour la moyenne réelle
     plt.axvline(real_mean, color="red", linestyle="--", linewidth=2, label=f"Moyenne réelle = {real_mean:.2f}")
 
-    # Texte indicatif
     plt.text(0.95, 0.8,
              f"Simulations > real : {n_above} ({round(n_above/len(simulation_means)*100, 2)}%)\n"
              f"Unilateral p-value > real : {p_value_higher}\n"
@@ -680,8 +657,6 @@ def plot_coloc_mean_distribution(outname, df_sim, real_data, elem_colocalizing):
              horizontalalignment='right',
              bbox=dict(boxstyle="round", facecolor="white", edgecolor="gray", alpha=0.8))
     
-    
-    # Mise en forme
     plt.xlabel("Moyenne de systems qui colocalize avec")
     plt.ylabel("Fréquence")
     plt.title(f"Distribution des moyennes par simulation vs moyenne réelle de colocalization avec {elem_colocalizing}")
@@ -700,11 +675,8 @@ def plot_mean_distribution_from_perspective(df_sim, df_real, elem_colocalizing, 
     
     real_data = df_real[f"N_{elem_colocalizing}_colocalizing"]
     
-    # 1. Moyennes des simulations
     simulation_means = df_sim.mean(axis=0)
 
-    # 2. Moyenne des données réelles
-    # Adapter cette ligne si ta colonne a un nom spécifique
     real_data = real_data.squeeze()
     real_mean = real_data.mean()
 
@@ -714,16 +686,10 @@ def plot_mean_distribution_from_perspective(df_sim, df_real, elem_colocalizing, 
     p_value_lower = (simulation_means <= real_mean).sum() / len(simulation_means)
     p_value_higher = (simulation_means >= real_mean).sum() / len(simulation_means)
     
-    # 3. Plot
     plt.figure(figsize=(10, 6))
-
-    # Histogramme ou KDE des moyennes simulées
     sns.histplot(simulation_means, kde=True, bins=30, color="blue", alpha=0.6, label="Moyennes (simulations)")
-
-    # Ligne verticale pour la moyenne réelle
     plt.axvline(real_mean, color="red", linestyle="--", linewidth=2, label=f"Moyenne réelle = {real_mean:.2f}")
 
-    # Texte indicatif
     plt.text(0.95, 0.8,
              f"Simulations > real : {n_above} ({round(n_above/len(simulation_means)*100, 2)}%)\n"
              f"Unilateral p-value > real : {p_value_higher}\n"
@@ -736,7 +702,6 @@ def plot_mean_distribution_from_perspective(df_sim, df_real, elem_colocalizing, 
              bbox=dict(boxstyle="round", facecolor="white", edgecolor="gray", alpha=0.8))
     
     
-    # Mise en forme
     plt.xlabel("Moyenne de systems qui colocalize avec")
     plt.ylabel("Fréquence")
     plt.title(f"{elem_perspective_name} colocalization perspectives with (or not) randomly distributed {elem_colocalizing}")

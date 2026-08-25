@@ -26,16 +26,13 @@ def main(tsv_input, outfile):
         df_real = df_real[df_real["Element_type"] == row["elem_type"]]
         real_data = df_real[f"N_NR_genes_in_spot"]
         
-        # 1. Moyennes des simulations
         simulation_means = df_sim.mean(axis=0)
         
-        # 2. Moyenne des données réelles
         real_data = real_data.squeeze()
         real_mean = real_data.mean()
         p_value_lower = (simulation_means <= real_mean).sum() / len(simulation_means)
         p_value_higher = (simulation_means >= real_mean).sum() / len(simulation_means)
-        
-        #Storing data for the complete
+
         list_cats.append(row["elem_type"])
         list_sim_values.append(simulation_means)
         list_real_values.append(real_mean)

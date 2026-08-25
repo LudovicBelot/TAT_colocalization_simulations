@@ -20,10 +20,8 @@ def main(tsv_real, tsv_sim, elem_type, outfile):
     df_real = df_real[df_real["Element_type"] == elem_type]
     real_data = df_real[f"N_NR_genes_in_spot"]
     
-    # 1. Moyennes des simulations
     simulation_means = df_sim.mean(axis=0)
 
-    # 2. Moyenne des données réelles
     real_data = real_data.squeeze()
     real_mean = real_data.mean()
 
@@ -34,10 +32,8 @@ def main(tsv_real, tsv_sim, elem_type, outfile):
     p_value_higher = (simulation_means >= real_mean).sum() / len(simulation_means)
     z_score = (real_mean - simulation_means.mean()) / simulation_means.std()    
     
-    # 3. Plot
     plt.figure(figsize=(10, 6))
 
-    # Histogramme ou KDE des moyennes simulées
     if elem_type == "TA":
         color_sim = "blue"
     elif elem_type == "defense":
@@ -49,10 +45,8 @@ def main(tsv_real, tsv_sim, elem_type, outfile):
   
     sns.histplot(simulation_means, kde=True, bins=30, color=color_sim, alpha=0.6, label="Moyennes (simulations)")
 
-    # Ligne verticale pour la moyenne réelle
     plt.axvline(real_mean, color="red", linestyle="--", linewidth=2, label=f"Real mean = {real_mean:.4f}")
 
-    # Texte indicatif
     plt.text(0.95, 0.8,
              f"Simulations ≥ real : {n_above+n_equal} ({round(n_above/len(simulation_means)*100, 4)}%)\n"
              f"Unilateral p-value ≥ real : {p_value_higher}\n"
@@ -66,7 +60,6 @@ def main(tsv_real, tsv_sim, elem_type, outfile):
              bbox=dict(boxstyle="round", facecolor="white", edgecolor="gray", alpha=0.8))
     
     
-    # Mise en forme
     plt.xlabel("Length of the spots (in number of non-redundant genes)")
     plt.ylabel("N simulations")
     plt.title(f"{elem_type} random distribution within Photorhabdus Spot-pangenome")

@@ -38,11 +38,8 @@ def main(tsv_real, tsv_sim, elem1_type, elem2_type, outfile):
     df_real = df_real[df_real["Element_type"] == elem1_type]
     real_data = df_real[f"N_{elem2_type}_colocalizing"]
     
-    # 1. Moyennes des simulations
     simulation_means = df_sim.mean(axis=0)
 
-    # 2. Moyenne des données réelles
-    # Adapter cette ligne si ta colonne a un nom spécifique
     real_data = real_data.squeeze()
     real_mean = real_data.mean()
 
@@ -53,10 +50,8 @@ def main(tsv_real, tsv_sim, elem1_type, elem2_type, outfile):
     p_value_higher = (simulation_means >= real_mean).sum() / len(simulation_means)
     z_score = (real_mean - simulation_means.mean()) / simulation_means.std()
     
-    # 3. Plot
     plt.figure(figsize=(10, 6))
 
-    # Histogramme ou KDE des moyennes simulées
     if elem1_type == "TA":
         color_sim = "blue"
     elif elem1_type == "defense":
@@ -80,18 +75,15 @@ def main(tsv_real, tsv_sim, elem1_type, elem2_type, outfile):
     ax1.set_xlabel(f"Mean number of {elem2_type} associated with a given {elem1_type}", fontsize=14)
     ax1.tick_params(axis='both', which='major', labelsize=14)
     
-    # Then overlay a KDE if you want the smooth curve
     ax2 = plt.gca().twinx()
     sns.kdeplot(simulation_means, ax=ax2, color=color_sim, alpha=0.3, fill=True)
     ax2.set_ylabel('')
     ax2.tick_params(right=False, labelright=False)
     ax2.spines['right'].set_visible(False)
     
-    # Ligne verticale pour la moyenne réelle
     #plt.axvline(real_mean, color="red", linestyle="-", linewidth=4, label=f"Real mean = {real_mean:.4f}")
     plt.axvline(real_mean, color="red", linestyle="--", linewidth=3, label=f"Real mean = {real_mean:.4f}")
     
-    # Texte indicatif
     """
     plt.text(0.95, 0.8,
              f"N simulation ≥ real : {n_above+n_equal} ({round(n_above/len(simulation_means)*100, 4)}%)\n"
@@ -106,12 +98,11 @@ def main(tsv_real, tsv_sim, elem1_type, elem2_type, outfile):
              bbox=dict(boxstyle="round", facecolor="white", edgecolor="gray", alpha=0.8))
     """
 
-    # Remove the box around the plot
+
     ax = plt.gca()
     ax.spines['top'].set_visible(False)
     ax.spines['right'].set_visible(False)
 
-    # Mise en forme
     #plt.xlabel(f"Mean number of {elem2_type} associated with a given {elem1_type}", fontsize=14)
     #plt.ylabel("N simulation", fontsize=14)
     plt.tick_params(axis='both', which='major', labelsize=14)

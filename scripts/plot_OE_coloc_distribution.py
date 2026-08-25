@@ -63,8 +63,6 @@ def main(tsv_input, outfile):
         OE_value = (real_mean - simulation_global_mean) / (real_mean + simulation_global_mean)
         #plot_OE_graph(OE_value, p_value_lower, p_value_higher, row["elem1_type"], row["elem2_type"], row["color"], outfile)
                 
-    
-        #Storing data for the complete
         list_cats.append(row["elem2_type"])
         list_OE_vals.append(OE_value)
         list_colors.append(row["color"])
