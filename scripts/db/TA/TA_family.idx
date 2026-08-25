@@ -1,0 +1,25 @@
+#csv file used as reference to class the different TA founded into canonical families
+hmm_name,TA_family
+ataT,ataT
+#BrnT_toxin,
+CcdB,CcdB/MazF
+Couple_hipA,HipA
+Fic,FIC
+Gp49,ParE/RelE-like
+HicA_toxin,HicA
+HigB_toxin,ParE/RelE-like
+HigB-like_toxin,ParE/RelE-like
+HipA_C,HipA
+#MqsR_toxin,
+ParE_toxin,ParE/RelE-like
+ParE-like_toxin,ParE/RelE-like
+#PemK_toxin,
+PIN,VapC
+RelE,ParE/RelE-like
+RES,RES
+SocAB_toxin_(plu3215),CcdB/MazF
+StdB-E_(plu0625),ParE/RelE-like
+Toxin_YhaV,ParE/RelE-like
+YafO_toxin,YafO
+YafQ_toxin,ParE/RelE-like
+#YoeB_toxin,
